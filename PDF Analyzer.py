@@ -4,8 +4,6 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 from nltk.tokenize import sent_tokenize
-import nltk
-nltk.download('punkt_tab')
 
 Tk().withdraw()
 
