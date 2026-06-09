@@ -6,6 +6,10 @@ import chromadb
 from dotenv import load_dotenv
 import os
 from groq import Groq
+import nltk
+
+
+nltk.download('punkt_tab', quiet=True)
 
 #Load up the Groq API Key
 load_dotenv()
