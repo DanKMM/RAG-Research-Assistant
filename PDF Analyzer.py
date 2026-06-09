@@ -4,6 +4,7 @@ from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 from nltk.tokenize import sent_tokenize
 import chromadb
+import ollama
 
 Tk().withdraw()
 
@@ -20,7 +21,11 @@ for page in reader.pages:
 #Check to ensure text is being extracted correctly
 
 #Chunk the text into single sentances for smaller pieces for embedding
-sentences = sent_tokenize(text)
+# We need to tokenize the text because simply searching for the plain text meaning will only get us looking at those exact words. 
+# Instead, by tokenizing and embedding, we can look for actual meaning rather than simply looking for the same words. 
+# This is because the embedding will capture the meaning of the sentence, so even if the user searches for something that isn't exactly 
+# the same as the text in the document, it can still return relevant results based on the meaning of the sentences.
+sentences = sent_tokenize(text) 
 chunks = []
 for sentence in sentences:
     chunks.append(sentence)
@@ -32,7 +37,6 @@ embeddings = model.encode(chunks)
 
 #Vector Store with ChromaDB
 client = chromadb.PersistentClient(path="./vectorstore")
-collection = client.get_or_create_collection(name="research_docs")
 
 #When the user puts in a new file, delete the old collection and create a new one
 client.delete_collection(name="research_docs")
@@ -44,7 +48,6 @@ collection.add(
     ids=[str(i) for i in range(len(chunks))]
 )
 
-print(f"Stored {len(chunks)} chunks in the vector store.")
 #Take a text input from the user
 query = input("What do you want to search for in the document? ")
 #Embed it using the same model and pass it to collection.query()
@@ -55,7 +58,12 @@ results = collection.query(
     query_embeddings=[query_embedding],
     n_results=5
 )
-#Print the returned chunks so you can verify it's working
-print("Top 5 relevant chunks:") 
-for i in results['documents'][0]:
-    print(i + "\n") 
+
+all_results = ""
+for i in range(5):
+    all_results += results['documents'][0][i] + '\n'
+
+#Send Ollama the query and the relevant chunks to get a response    
+ollama_query = f"You are a research assistant. The context from the document is: {all_results}. The user wants to know: {query}. Based on the information provided, answer the user's question as best as you can. If you don't know the answer, say you don't know."
+response = ollama.chat(model="llama3.2", messages=[{"role": "user", "content": ollama_query}])
+print(response['message']['content'])
