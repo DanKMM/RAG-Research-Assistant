@@ -9,7 +9,7 @@ from groq import Groq
 
 #Load up the Groq API Key
 load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")
+api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
 client_groq = Groq(api_key=api_key)
 
 #Upload file from PDF and extract the text from it
@@ -39,7 +39,7 @@ if uploaded_file is not None:
 
 
     #Vector Store with ChromaDB
-    client = chromadb.PersistentClient(path="./vectorstore")
+    client = chromadb.EphemeralClient()
 
     #When the user puts in a new file, delete the old collection and create a new one
     client.delete_collection(name="research_docs")
