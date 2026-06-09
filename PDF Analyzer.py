@@ -49,8 +49,10 @@ if uploaded_file is not None:
     #Vector Store with ChromaDB
     client = chromadb.EphemeralClient()
 
-    #When the user puts in a new file, delete the old collection and create a new one
-    client.delete_collection(name="research_docs")
+    #Check if the collection already exists, if it does, delete it and create a new one. This is because we want to start fresh with each new document.
+    existing = client.list_collections()
+    if "research_docs" in [c.name for c in existing]:
+        client.delete_collection(name="research_docs")
     collection = client.get_or_create_collection(name="research_docs")
 
     collection.add(
