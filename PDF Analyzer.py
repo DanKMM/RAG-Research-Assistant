@@ -9,8 +9,12 @@ from groq import Groq
 
 #Load up the Groq API Key
 load_dotenv()
-api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
+api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", None)
+if not api_key:
+    st.error("GROQ_API_KEY not found. Please set it in your environment or Streamlit secrets.")
+    st.stop()
 client_groq = Groq(api_key=api_key)
+
 
 #Upload file from PDF and extract the text from it
 uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
