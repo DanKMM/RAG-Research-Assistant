@@ -78,8 +78,9 @@ if uploaded_file is not None:
             all_results += results['documents'][0][i] + '\n'
         ollama_query = f"Based on the following information from the document, answer the question: {query}\n\n{all_results}"
         #Create Groq query to send to the LLM
+        st.write(f"Prompt length: {len(ollama_query)} characters")
         response = client_groq.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": ollama_query}]
         )
         st.write(response.choices[0].message.content)
