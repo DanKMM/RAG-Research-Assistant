@@ -21,7 +21,11 @@ client_groq = Groq(api_key=api_key)
 
 
 #Upload file from PDF and extract the text from it
-uploaded_file = st.file_uploader("## Upload a :rainbow[PDF]", type="pdf")
+#Make the Streamlit text bigger and more colorful for fun
+st.markdown("<h1 style='text-align: center; color: #FF5733;'>PDF Research Assistant</h1>", unsafe_allow_html=True)
+
+#Make uplaoded_file bigger and more colorful for fun
+uploaded_file = st.file_uploader("## Upload a :rainbow[PDF]", type="pdf", label_visibility="collapsed")
 if uploaded_file is not None:
     reader = PdfReader(uploaded_file)
     text = ""
