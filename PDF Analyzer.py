@@ -21,7 +21,7 @@ client_groq = Groq(api_key=api_key)
 
 
 #Upload file from PDF and extract the text from it
-uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+uploaded_file = st.file_uploader("##Upload a :rainbow[PDF]", type="pdf")
 if uploaded_file is not None:
     reader = PdfReader(uploaded_file)
     text = ""
@@ -62,7 +62,7 @@ if uploaded_file is not None:
     )
 
     #Take a text input from the user
-    query = st.text_input("What do you want to search for in the document? ")
+    query = st.text_input("##What do you want to search for in the document? ")
     #Embed it using the same model and pass it to collection.query()
     if query:
         query_embedding = model.encode(query).tolist()
@@ -78,9 +78,9 @@ if uploaded_file is not None:
             all_results += results['documents'][0][i] + '\n'
         ollama_query = f"Based on the following information from the document, answer the question: {query}\n\n{all_results}"
         #Create Groq query to send to the LLM
-        st.write(f"Prompt length: {len(ollama_query)} characters")
+        st.write(f"##Prompt length: {len(ollama_query)} characters")
         response = client_groq.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": ollama_query}]
         )
-        st.write(response.choices[0].message.content)
+        st.write(f"##Response: {response.choices[0].message.content}")
