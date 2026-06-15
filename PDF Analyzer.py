@@ -25,7 +25,7 @@ client_groq = Groq(api_key=api_key)
 st.markdown("<h1 style='text-align: center; color: #FF5733;'>PDF Research Assistant</h1>", unsafe_allow_html=True)
 
 #Make uplaoded_file bigger and more colorful for fun
-uploaded_file = st.file_uploader("Upload a :rainbow[PDF]", type="pdf", label_visibility="collapsed")
+uploaded_file = st.file_uploader("Please upload a :rainbow[PDF]", type="pdf", label_visibility="collapsed")
 if uploaded_file is not None:
     reader = PdfReader(uploaded_file)
     text = ""
