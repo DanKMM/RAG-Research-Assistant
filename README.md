@@ -19,8 +19,8 @@ The app runs a full RAG pipeline through:
 - **Chunking** -  Text is split into individual sentences using NLTK, keeping semantic portions of text intact
 - **Embedding** - Each sentence is converted to a 384-dimension vector via Sentence Transformers
 - **Storing** - Each vector is then stored in a ChromaDB vector database.
-- **Retrieval** - User query is embedded with the same model as the text. The query is then compared to the chunked vectors using cosine similarity and the 5 most similar chunks are returned.
-- **Generate** -  Retrieved chunks are sent to Groq's llama3-70b-8192 model to generate answers from the retrieved content.
+- **Retrieval** - User query is embedded with the same model as the text. The query is then compared to the chunked vectors using cosine similarity, and the 5 most similar chunks are returned.
+- **Generation** -  Retrieved chunks are sent to Groq's llama3-70b-8192 model to generate answers from the retrieved content.
 
 ---
 
@@ -76,8 +76,3 @@ RAG-Research-Assistant/
 ### Why this project?
 
 Standard LLMs like ChatGPT and Claude answer your questions based on their training data and, when pushed to answer a question outside their knowledge base, can hallucinate entirely false answers. However, through a RAG system, the model retrieves relevant information from the documents YOU upload. In other words, the model can only work with what you give it. Your own personal research assistant.
-
-
-git clone https://github.com/username/project.git
-cd project
-npm install
