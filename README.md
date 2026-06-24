@@ -1,4 +1,4 @@
-RAG Research Assistant
+### RAG Research Assistant
 
 An AI-powered research assistant that lets you upload a PDF and ask questions about it in natural language. Built on a full Retrieval-Augmented Generation (RAG) pipeline — no hallucinations from training data, just answers grounded in your document.
 
