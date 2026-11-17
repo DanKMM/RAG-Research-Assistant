@@ -67,8 +67,8 @@ if uploaded_file is not None:
             )
 
             all_results = ""
-            for i in range(5):
-                all_results += results['documents'][0][i] + '\n'
+            for result in results['documents'][0]:
+                all_results += result + '\n'
             ollama_query= f"Based on the following information from the document, answer the question: {query}\n\n{all_results}"
             #Create Ollama query to send to the LLM
             st.write(f"Prompt length: {len(ollama_query)} characters")
@@ -76,4 +76,4 @@ if uploaded_file is not None:
                 model="llama3.2",
                 messages=[{"role": "user", "content": ollama_query}]
             )
-            st.write(f"#Response: {response.message.content}")
+            st.markdown(f"### **Results:**\n\n{response.message.content}")
