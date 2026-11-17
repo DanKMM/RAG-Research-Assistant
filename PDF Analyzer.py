@@ -3,22 +3,10 @@ from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 from nltk.tokenize import sent_tokenize
 import chromadb
-from dotenv import load_dotenv
-import os
-from groq import Groq
 import nltk
-
+import ollama
 
 nltk.download('punkt_tab', quiet=True)
-
-#Load up the Groq API Key
-load_dotenv()
-api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", None)
-if not api_key:
-    st.error("GROQ_API_KEY not found. Please set it in your environment or Streamlit secrets.")
-    st.stop()
-client_groq = Groq(api_key=api_key)
-
 
 #Upload file from PDF and extract the text from it
 #Make the Streamlit text bigger and more colorful for fun
@@ -50,12 +38,12 @@ if uploaded_file is not None:
         model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
         embeddings = model.encode(chunks)
 
-
         #Vector Store with ChromaDB
         client = chromadb.EphemeralClient()
 
         #Check if the collection already exists, if it does, delete it and create a new one. This is because we want to start fresh with each new document.
         existing = client.list_collections()
+
         if "research_docs" in [c.name for c in existing]:
             client.delete_collection(name="research_docs")
         collection = client.get_or_create_collection(name="research_docs")
@@ -82,10 +70,10 @@ if uploaded_file is not None:
             for i in range(5):
                 all_results += results['documents'][0][i] + '\n'
             ollama_query= f"Based on the following information from the document, answer the question: {query}\n\n{all_results}"
-            #Create Groq query to send to the LLM
+            #Create Ollama query to send to the LLM
             st.write(f"Prompt length: {len(ollama_query)} characters")
-            response = client_groq.chat.completions.create(
-                model="llama-3.1-8b-instant",
+            response = ollama.chat(
+                model="llama3.2",
                 messages=[{"role": "user", "content": ollama_query}]
             )
-            st.write(f"Response: #{response.choices[0].message.content}")
+            st.write(f"#Response: {response.message.content}")

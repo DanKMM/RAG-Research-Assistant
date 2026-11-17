@@ -3,4 +3,4 @@ sentence-transformers
 nltk
 chromadb
 python-dotenv
-groq
+ollama
